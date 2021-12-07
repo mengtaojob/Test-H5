@@ -1,0 +1,264 @@
+<!-- MarkerList完整示例 -->
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <title>门店地图预览</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://webapi.amap.com/ui/1.0/ui/misc/MarkerList/examples/index.css">
+</head>
+<style>
+    html, body, #container {
+        height: 100%;
+        width: 100%;
+    }
+
+    .amap-icon img {
+        width: 25px;
+        height: 35px;
+    }
+
+    .amap-marker-label{
+        border: 0;
+        background-color: transparent;
+    }
+    .back{
+        width: 3rem;
+        height:3rem;
+        border-radius: 50%;
+        background: #FFFFFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        right: 2rem;
+        top:2.5rem;
+        box-shadow: rgba(203, 203, 203, 0.5) 3px 3px 10px 2px;
+    }
+</style>
+<body>
+    <div id="container" style="width: 100%" tabindex="0"></div>
+    <div  style="z-index: 999;position: absolute;left: 10%;top: 85%;width: 80%;height: 96px;background: #FFFFFF;">
+        <div style="font-size: 15px;padding-top: 8px;padding-left: 15px;color: #292E33"><strong class="name">高新区西子汽车维修店</strong></div>
+        <div style="font-size: 5px;padding-top: 8px;padding-left: 15px;color: #676C73">
+            <span>
+                <img style="width: 16px;height: 16px;vertical-align:middle" src="image/list.png" alt="">
+            </span>
+            <span style="padding-bottom: 5px;text-align: center;font-size: 13px" class="address">
+                合肥市高新区永和路121号
+            </span>
+        </div>
+        <div style="font-size: 5px;padding-top: 10px;padding-left: 15px">
+            <span style="background: #676C73;color: #FFFFFF;border-radius: 2px;padding: 3px;font-size: 13px">预约热线</span>
+            <span style="background: #FFF1EC;color: #FF7340;border-radius: 2px;padding: 3px;font-size: 13px" class="phone">4006965885</span>
+            <span><span style="float: right;color: #676C73;padding-right: 8px;font-size: 13px">营业时间9:00-18:00</span><img style="width: 16px;height: 16px;float:right;vertical-align:middle;padding-left: 2px" src="image/time.png" alt=""></span>
+        </div>
+    </div>
+    <div class="back">
+        <img style="width: 22px;height: 22px" src="image/list.png" alt="">
+    </div>
+<script type="text/javascript" src='http://webapi.amap.com/maps?v=1.4.15&key=d7a52e290bd3abbb645c43c10e41d1cc'></script>
+<!-- UI组件库 1.0 -->
+<script src="http://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+<script type="text/javascript">
+    var markers = [];
+    var watchList = [];
+    var preIcon;
+    var latitude = 31.83674;
+    var longitude = 117.143906;
+    //加载数据  ajax加载
+    $(function () {
+        latitude = getUrlParam('latitude');
+        longitude = getUrlParam('longitude');
+
+        var data = {
+            "status": "success",
+            "msg": "获取成功",
+            "list": [
+                {
+                    "id": 17,
+                    "status": 2,
+                    "password": "123456",
+//                    "imgUrl": "http://kaiding.51cxgj.com/uploads/prodcut/20201208/b72af109f110694d29f69acc4d4b0750.jpg",
+                    "area": "高新区",
+                    "name": "鲁班车服",
+                    "address": "安徽省合肥市蜀山区高新技术产业",
+                    "phone": "15255135687",
+                    "type": 1,
+                    "jingDu": "117.149132",
+                    "weiDu": "31.835059",
+                    "techId": 1,
+                    "addTime": 1614563726,
+                    "updateTime": null
+                },
+                {
+                    "id": 23,
+                    "status": 2,
+                    "password": "123456",
+                    "imgUrl": "",
+                    "area": "152",
+                    "name": "Mrs chen Chen",
+                    "address": "安徽省合肥市庐阳区逍遥津街道长江中路401号韦博大厦",
+                    "phone": "55135687111",
+                    "type": 1,
+                    "jingDu": "117.283042",
+                    "weiDu": "31.86119",
+                    "techId": 1,
+                    "addTime": 1637737324,
+                    "updateTime": null
+                },
+                {
+                    "id": 24,
+                    "status": 2,
+                    "password": "123456",
+                    "imgUrl": "",
+                    "area": "蜀山",
+                    "name": "黄喜力汽车维修旗舰店",
+                    "address": "安徽省合肥市蜀山区海恒社区海尔(繁华大道)海尔工业园",
+                    "phone": "18368042399",
+                    "type": 1,
+                    "jingDu": "117.250746",
+                    "weiDu": "31.777098",
+                    "techId": 122,
+                    "addTime": 1638174041,
+                    "updateTime": null
+                },
+                {
+                    "id": 25,
+                    "status": 2,
+                    "password": "123456",
+                    "imgUrl": "",
+                    "area": "经开",
+                    "name": "经开区中环城汽车维修中心",
+                    "address": "安徽省合肥市蜀山区芙蓉社区如意馄饨(中环城店)中环购物中心",
+                    "phone": "18368042388",
+                    "type": 1,
+                    "jingDu": "117.207881",
+                    "weiDu": "31.780846",
+                    "techId": 130,
+                    "addTime": 1638253108,
+                    "updateTime": null
+                },
+                {
+                    "id": 26,
+                    "status": 2,
+                    "password": "123456",
+//                    "imgUrl": "\\uploads\\prodcut\\20211206\\d9dbd2df78ba338c4946ef37382b9acd.jpg",
+                    "area": "152",
+                    "name": "222",
+                    "address": "安徽省合肥市庐阳区逍遥津街道长江中路401号韦博大厦",
+                    "phone": "55135687222",
+                    "type": 1,
+                    "jingDu": "117.283042",
+                    "weiDu": "31.86119",
+                    "techId": 1,
+                    "addTime": 1638774304,
+                    "updateTime": null
+                }
+            ]
+        };
+        var map;
+        if (data.status == 'success'){
+            AMapUI.loadUI(['misc/MarkerList', 'overlay/SimpleMarker', 'overlay/SimpleInfoWindow','misc/PositionPicker'], function(MarkerList, SimpleMarker, SimpleInfoWindow,PositionPicker) {
+                //创建地图
+
+                map = new AMap.Map('container', {
+                    resizeEnable: true,
+                    center: [117.143906,31.83674],
+                    zoom: 15
+                });
+                console.log(1111);
+
+                AMap.plugin('AMap.Geolocation', function() {
+                    var geolocation = new AMap.Geolocation({
+                        enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                        timeout: 10000,          //超过10秒后停止定位，默认：5s
+                        buttonPosition:'RB',    //定位按钮的停靠位置
+                        buttonOffset: new AMap.Pixel(10, 120),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                        zoomToAccuracy: true,   //定位成功后是否自动调整地图视野到定位点
+
+                    });
+                    map.addControl(geolocation);
+                    geolocation.getCurrentPosition();
+                });
+
+                map.clearMap();  // 清除地图覆盖物
+
+                var positionPicker = new PositionPicker({
+                    mode: 'dragMap',
+                    map: map,
+                    iconStyle: { //自定义外观
+                        url: '/ding.png',
+                        ancher: [24, 40],
+                        size: [26, 38]
+                    }
+                });
+
+                positionPicker.start();
+
+                markers =  data.list;
+                for (var i = 0; i < data.list.length; i++){
+                    preIcon = new AMap.Icon({
+                        image: 'image/select.png',
+                        size: new AMap.Size(26, 36), //图标大小
+                        imageSize: new AMap.Size(26, 36)
+                    });
+                    // 添加一些分布不均的点到地图上,地图上添加三个点标记，作为参照
+                    markers = new AMap.Marker({
+                        map: map,
+                        icon: preIcon,
+                        position: [data.list[i].jingDu,data.list[i].weiDu],
+                        offset: new AMap.Pixel(-13, -30),
+                        title: data.list[i].name + ',' + data.list[i].address + ',' + 15255135687,
+                        clickable : true , //是否可点击
+                        extData:{
+                            id:data.list[i].id
+                        }
+                    });
+                    // label默认蓝框白底左上角显示，样式className为：amap-marker-label
+                    markers.setLabel({
+                        content: "<div style='color: #000000;background: #FFFFFF;font-size: 13px;padding: 4px;'>" + data.list[i].name + "</div>", //设置文本标注内容
+                        direction: 'top' //设置文本标注方位
+                    });
+                    watchList.push(markers);
+
+                    // 给每一个点标记注册点击事件
+                    AMap.event.addListener(markers, 'click', function(e) {
+                        console.log(e)
+                        var arr = e.target.De.title.split(',');
+                        $('.name').html(arr[0]);
+                        $('.address').html(arr[1]);
+                        $('.phone').html(arr[2]);
+                        preIcon = new AMap.Icon({
+                            image: 'image/list.png',
+                            size: new AMap.Size(26, 36), //图标大小
+                            imageSize: new AMap.Size(26, 36)
+                        });
+                        e.target.setIcon(preIcon);
+//                                this.find('.amap-icon img').attr('src','/ding.png')
+                    })
+                }
+
+                //自适应中心点、展示所有标记点--核心代码
+                var newCenter = map.setFitView();
+                newCenter.getCenter();
+            });
+
+        }
+    });
+
+    function getUrlParam(name)
+    {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r!=null) return unescape(r[2]); return null; //返回参数值
+    }
+
+    $('.back').click(function () {
+        window.location.href = '/shopList'
+    })
+
+</script>
+</body>
+
+</html>
